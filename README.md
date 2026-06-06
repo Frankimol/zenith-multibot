@@ -1,0 +1,2 @@
+# zenith-multibot
+Trading bot
