@@ -273,8 +273,8 @@ function analyzeCandles(candles, symbol) {
         signal: 'LONG',
         reason: `TREND | ADX:${adx.adx.toFixed(1)} RSI:${rsi.toFixed(1)} VOL:${volRatio.toFixed(2)}x`,
         price, atr,
-        tp1:  price + atr * 1.5,
-        tp2:  price + atr * 2.5,
+        tp1:  price + atr * 1.7,
+        tp2:  price + atr * 2.7,
         sl:   price - atr * 1.0,
         mode: 'TREND',
         indicators: { rsi, adx:adx.adx, macdHist:macd.histogram, volRatio, e9, e21, e200 }
@@ -295,8 +295,8 @@ function analyzeCandles(candles, symbol) {
         signal: 'LONG',
         reason: `REVERSION | ADX:${adx.adx.toFixed(1)} RSI:${rsi.toFixed(1)} BB_LOW VOL:${volRatio.toFixed(2)}x`,
         price, atr,
-        tp1:  bb.middle,
-        tp2:  bb.upper,
+        tp1:  bb.middle * 1.002,
+        tp2:  bb.upper  * 0.998,
         sl:   price - atr * 0.8,
         mode: 'REVERSION',
         indicators: { rsi, adx:adx.adx, macdHist:macd.histogram, volRatio }
