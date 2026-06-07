@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Zenith MultiBot</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap');
+  :root {
+    --bg:#070a0f; --bg2:#0d1219; --bg3:#141b25; --border:#1e2d3d;
+    --accent:#00ff88; --accent2:#00c4ff; --warn:#ffaa00; --danger:#ff4466;
+    --text:#c8d8e8; --text2:#7090a8; --green:#00ff88; --red:#ff4466;
+    --mono:'Space Mono',monospace; --sans:'Syne',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  .app{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:12px;}
+  .header{display:flex;align-items:center;justify-content:space-between;padding:16px 0 12px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+  .logo{font-family:var(--sans);font-size:20px;font-weight:800;letter-spacing:-0.5px;}
+  .logo span{color:var(--accent);}
+  .logo small{font-size:10px;color:var(--text2);display:block;font-weight:400;letter-spacing:2px;margin-top:1px;}
+  .status-pill{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;border:1px solid var(--border);background:var(--bg2);transition:.3s;}
+  .status-pill.running{border-color:var(--accent);color:var(--accent);background:rgba(0,255,136,0.06);}
+  .status-pill.stopped{border-color:var(--text2);color:var(--text2);}
+  .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .dot.pulse{animation:pulse 1.5s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;}
+  .card h3{font-size:11px;letter-spacing:2px;color:var(--accent2);margin-bottom:12px;}
+  .input-row{display:flex;gap:8px;}
+  .input-row input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-family:var(--mono);font-size:11px;outline:none;}
+  .input-row input::placeholder{color:var(--text2);}
+  .input-row input:focus{border-color:var(--accent2);}
+  .btn-sm{background:var(--accent2);color:#000;border:none;padding:10px 14px;border-radius:8px;font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+  .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 10px;text-align:center;}
+  .stat-val{font-family:var(--mono);font-size:16px;font-weight:700;line-height:1;}
+  .stat-val.green{color:var(--green);}.stat-val.red{color:var(--red);}.stat-val.blue{color:var(--accent2);}.stat-val.warn{color:var(--warn);}
+  .stat-lbl{font-size:9px;color:var(--text2);letter-spacing:1px;margin-top:4px;}
+  .btc-bar{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;font-family:var(--mono);}
+  .btc-bar .lbl{font-size:10px;color:var(--text2);letter-spacing:1px;}
+  .btc-bar .val{font-size:13px;font-weight:700;}
+  .chg{font-size:11px;padding:2px 8px;border-radius:4px;}
+  .chg.pos{color:var(--green);background:rgba(0,255,136,.1);}
+  .chg.neg{color:var(--red);background:rgba(255,68,102,.1);}
+  .control-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+  .btn{padding:13px;border-radius:10px;border:none;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:.2s;letter-spacing:.5px;}
+  .btn:active{transform:scale(.97);}
+  .btn-start{background:var(--accent);color:#000;}
+  .btn-stop{background:var(--danger);color:#fff;}
+  .btn-demo{background:var(--bg3);color:var(--warn);border:1px solid var(--warn);font-size:12px;}
+  .btn-live{background:var(--bg3);color:var(--accent2);border:1px solid var(--accent2);font-size:12px;}
+  .btn-reset{background:var(--bg3);color:var(--text2);border:1px solid var(--border);font-size:11px;grid-column:1/-1;padding:9px;}
+  .mode-row{display:flex;gap:8px;margin-bottom:14px;align-items:center;}
+  .mode-badge{padding:5px 14px;border-radius:6px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;}
+  .mode-badge.demo{background:rgba(255,170,0,.15);color:var(--warn);border:1px solid rgba(255,170,0,.3);}
+  .mode-badge.live{background:rgba(0,255,136,.12);color:var(--accent);border:1px solid rgba(0,255,136,.3);}
+  .mode-hint{font-size:10px;color:var(--text2);}
+  .tabs{display:flex;gap:4px;margin-bottom:14px;}
+  .tab{flex:1;padding:9px 0;text-align:center;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;color:var(--text2);transition:.2s;letter-spacing:.5px;}
+  .tab.active{background:var(--bg3);border-color:var(--accent2);color:var(--accent2);}
+  .section-title{font-size:10px;letter-spacing:2px;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+  .section-title span{color:var(--accent2);}
+  .empty{text-align:center;padding:24px;color:var(--text2);font-size:12px;border:1px dashed var(--border);border-radius:10px;}
+  .wake-bar{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);border-radius:8px;padding:8px 12px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;font-size:10px;}
+  .wake-bar span{color:var(--text2);}
+  .wake-bar strong{color:var(--accent);font-family:var(--mono);}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--accent);padding:10px 20px;border-radius:8px;font-family:var(--mono);font-size:12px;color:var(--accent);opacity:0;transition:.3s;pointer-events:none;z-index:999;white-space:nowrap;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="logo">Zenith<span>Multi</span>Bot<small>STANDALONE v2.0 — BINANCE DIRECT</small></div>
+    <div class="status-pill stopped" id="statusPill">
+      <div class="dot" id="statusDot"></div>
+      <span id="statusText">PARADO</span>
+    </div>
+  </div>
+
+  <div class="wake-bar">
+    <span> Wake Lock</span>
+    <strong id="wakeLockStatus">INACTIVO</strong>
+  </div>
+
+  <div class="card" id="apiCard">
+    <h3> BINANCE API KEYS</h3>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <input type="password" id="apiKey" placeholder="API Key (solo trading, sin retiros)">
+      <input type="password" id="apiSecret" placeholder="API Secret">
+      <button class="btn-sm" onclick="saveKeys()" style="width:100%"> GUARDAR KEYS</button>
+    </div>
+    <div style="font-size:10px;color:var(--text2);margin-top:8px;font-family:var(--mono);" id="keysStatus">Sin keys — modo DEMO activo</div>
+  </div>
+
+  <div class="btc-bar">
+    <div><div class="lbl">BTC/USDC</div><div class="val" id="btcPrice">—</div></div>
+    <div><div class="lbl">CAMBIO 1H</div><div><span class="chg" id="btcChg">—</span></div></div>
+    <div><div class="lbl">ÚLTIMA SCAN</div><div class="val" style="font-size:10px;color:var(--text2)" id="lastScan">—</div></div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val blue" id="statBalance">—</div><div class="stat-lbl">BALANCE</div></div>
+    <div class="stat-card"><div class="stat-val" id="statTrades">0</div><div class="stat-lbl">TRADES</div></div>
+    <div class="stat-card">
+      <div class="stat-val green" id="statWinRate">—%</div><div class="stat-lbl">WIN RATE</div>
+      <div style="background:var(--bg3);border-radius:4px;height:6px;margin-top:6px;overflow:hidden"><div id="winrateFill" style="height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--accent2));width:0%;transition:width .5s"></div></div>
+    </div>
+    <div class="stat-card"><div class="stat-val" id="statPnl">0</div><div class="stat-lbl">PNL USDC</div></div>
+  </div>
+
+  <div class="mode-row">
+    <div class="mode-badge demo" id="modeBadge">DEMO</div>
+    <div class="mode-hint" id="modeHint">Sin dinero real — practica gratis</div>
+  </div>
+
+  <div class="control-row">
+    <button class="btn btn-start" onclick="startBot()"> INICIAR</button>
+    <button class="btn btn-stop"  onclick="stopBot()"> DETENER</button>
+    <button class="btn btn-demo"  onclick="setMode('DEMO')"> DEMO</button>
+    <button class="btn btn-live"  onclick="setMode('LIVE')"> LIVE</button>
+    <button class="btn btn-reset" onclick="resetDemo()"> RESET DEMO (1000 USDC)</button>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('slots',this)">POSICIONES</div>
+    <div class="tab" onclick="showTab('history',this)">HISTORIAL</div>
+    <div class="tab" onclick="showTab('config',this)">CONFIG</div>
+    <div class="tab" onclick="showTab('log',this)">LOG</div>
+  </div>
+
+  <div id="tab-slots">
+    <div class="section-title">POSICIONES ABIERTAS <span id="slotsCount">0/4</span></div>
+    <div id="slotsList"><div class="empty">Sin posiciones.<br>Inicia el bot para escanear 30 pares.</div></div>
+  </div>
+  <div id="tab-history" style="display:none">
+    <div class="section-title">TRADES CERRADOS <span id="histCount">0</span></div>
+    <div id="tradesList"><div class="empty">Sin trades cerrados aún.</div></div>
+  </div>
+  <div id="tab-config" style="display:none">
+    <div class="card">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div><label style="font-size:10px;color:var(--text2);letter-spacing:1px;display:block;margin-bottom:5px;">TIMEFRAME</label>
+          <select id="cfgTimeframe" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:var(--mono);font-size:11px;outline:none;">
+            <option value="5m">5 minutos</option><option value="15m" selected>15 minutos</option><option value="1h">1 hora</option>
+          </select></div>
+        <div><label style="font-size:10px;color:var(--text2);letter-spacing:1px;display:block;margin-bottom:5px;">SLOTS MAX</label>
+          <select id="cfgSlots" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:var(--mono);font-size:11px;outline:none;">
+            <option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option>
+          </select></div>
+        <div><label style="font-size:10px;color:var(--text2);letter-spacing:1px;display:block;margin-bottom:5px;">% TRADE: <span id="cfgPctVal">20%</span></label>
+          <input type="range" id="cfgPct" min="10" max="33" value="20" oninput="document.getElementById('cfgPctVal').textContent=this.value+'%'" style="width:100%;"></div>
+        <div><label style="font-size:10px;color:var(--text2);letter-spacing:1px;display:block;margin-bottom:5px;">SCAN</label>
+          <select id="cfgScan" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:var(--mono);font-size:11px;outline:none;">
+            <option value="30000">30s</option><option value="60000" selected>1min</option><option value="180000">3min</option>
+          </select></div>
+      </div>
+      <button onclick="saveConfig()" style="width:100%;margin-top:10px;padding:10px;background:var(--bg3);border:1px solid var(--accent2);border-radius:8px;color:var(--accent2);font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;"> GUARDAR</button>
+    </div>
+    <div class="card" style="font-size:11px;color:var(--text2);line-height:1.8;font-family:var(--mono);">
+      <div style="color:var(--accent2);font-size:10px;letter-spacing:2px;margin-bottom:10px;">LÓGICA ACTIVA</div>
+      <div> <b style="color:var(--text)">TREND</b> — ADX&gt;25 | EMA9&gt;21 | RSI&gt;50 | MACD | VOL&gt;1.1x</div>
+      <div> <b style="color:var(--text)">REVERSION</b> — ADX&lt;20 | RSI&lt;35 | BB_LOW | MACD</div>
+      <div> BTC&lt;-3%/1hpausa | TP1breakeven | Timeout 4h</div>
+    </div>
+  </div>
+  <div id="tab-log" style="display:none">
+    <div class="card" id="logContainer"><div style="text-align:center;color:var(--text2);font-size:11px;padding:20px">Sin logs aún</div></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div><script>
+//  CONFIGURACIÓN 
+const SCAN_PAIRS = [
+  'BTCUSDC','ETHUSDC','BNBUSDC','SOLUSDC','XRPUSDC',
+  'ADAUSDC','DOGEUSDC','AVAXUSDC','DOTUSDC','MATICUSDC',
+  'LINKUSDC','UNIUSDC','ATOMUSDC','LTCUSDC','ETCUSDC',
+  'XLMUSDC','ALGOUSDC','VETUSDC','FILUSDC','TRXUSDC',
+  'NEARUSDC','FTMUSDC','SANDUSDC','MANAUSDC','AAVEUSDC',
+  'GRTUSDC','ENJUSDC','CHZUSDC','ZILUSDC','BATUSDC'
+];
+
+let CONFIG = {
+  mode:         localStorage.getItem('zm_mode') || 'DEMO',
+  timeframe:    localStorage.getItem('zm_tf')   || '15m',
+  maxSlots:     parseInt(localStorage.getItem('zm_slots') || '4'),
+  slotPct:      parseFloat(localStorage.getItem('zm_pct') || '0.20'),
+  scanInterval: parseInt(localStorage.getItem('zm_scan')  || '60000'),
+};
+
+let state = {
+  running:      false,
+  slots:        JSON.parse(localStorage.getItem('zm_openslots')   || '[]'),
+  closedTrades: JSON.parse(localStorage.getItem('zm_closed')      || '[]'),
+  balance:      JSON.parse(localStorage.getItem('zm_balance')     || '{"total":1000,"free":1000,"inTrade":0}'),
+  stats:        JSON.parse(localStorage.getItem('zm_stats')       || '{"wins":0,"losses":0,"totalPnl":0,"trades":0}'),
+  log:          [],
+  btcPrice:     0,
+  btcChange1h:  0,
+  lastScan:     null,
+};
+
+let scanTimer    = null;
+let wakeLock     = null;
+let API_KEY      = localStorage.getItem('zm_apikey')    || '';
+let API_SECRET   = localStorage.getItem('zm_apisecret') || '';
+
+//  WAKE LOCK 
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      document.getElementById('wakeLockStatus').textContent = 'ACTIVO ';
+      wakeLock.addEventListener('release', () => {
+        document.getElementById('wakeLockStatus').textContent = 'LIBERADO';
+        if (state.running) requestWakeLock();
+      });
+    } else {
+      document.getElementById('wakeLockStatus').textContent = 'NO SOPORTADO';
+    }
+  } catch(e) {
+    document.getElementById('wakeLockStatus').textContent = 'ERROR';
+  }
+}
+
+document.addEventListener('visibilitychange', async () => {
+  if (wakeLock !== null && document.visibilityState === 'visible' && state.running) {
+    await requestWakeLock();
+  }
+});
+
+//  PERSISTENCIA 
+function saveState() {
+  localStorage.setItem('zm_openslots', JSON.stringify(state.slots));
+  localStorage.setItem('zm_closed',    JSON.stringify(state.closedTrades.slice(0,50)));
+  localStorage.setItem('zm_balance',   JSON.stringify(state.balance));
+  localStorage.setItem('zm_stats',     JSON.stringify(state.stats));
+}
+
+function saveConfig() {
+  CONFIG.timeframe    = document.getElementById('cfgTimeframe').value;
+  CONFIG.maxSlots     = parseInt(document.getElementById('cfgSlots').value);
+  CONFIG.slotPct      = parseInt(document.getElementById('cfgPct').value) / 100;
+  CONFIG.scanInterval = parseInt(document.getElementById('cfgScan').value);
+  localStorage.setItem('zm_tf',    CONFIG.timeframe);
+  localStorage.setItem('zm_slots', CONFIG.maxSlots);
+  localStorage.setItem('zm_pct',   CONFIG.slotPct);
+  localStorage.setItem('zm_scan',  CONFIG.scanInterval);
+  showToast(' Config guardada');
+}
+
+function saveKeys() {
+  API_KEY    = document.getElementById('apiKey').value.trim();
+  API_SECRET = document.getElementById('apiSecret').value.trim();
+  localStorage.setItem('zm_apikey',    API_KEY);
+  localStorage.setItem('zm_apisecret', API_SECRET);
+  document.getElementById('keysStatus').textContent = API_KEY ? ' Keys guardadas — LIVE disponible' : 'Sin keys — modo DEMO activo';
+  showToast(' Keys guardadas');
+}
+
+//  LOG 
+function addLog(msg, type='INFO') {
+  state.log.unshift({ time: new Date().toISOString(), msg, type });
+  if (state.log.length > 100) state.log.pop();
+  renderLog(state.log);
+}
+
+//  BINANCE API 
+async function binanceFetch(path, params={}, signed=false) {
+  let query = Object.entries(params).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
+  if (signed) {
+    params.timestamp = Date.now();
+    params.recvWindow = 5000;
+    query = Object.entries(params).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
+    const sig = await hmacSHA256(API_SECRET, query);
+    query += `&signature=${sig}`;
+  }
+  const url = `https://api.binance.com${path}${query?'?'+query:''}`;
+  const headers = { 'X-MBX-APIKEY': API_KEY };
+  const res = await fetch(url, { headers });
+  return await res.json();
+}
+
+async function hmacSHA256(secret, message) {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey('raw', enc.encode(secret),
+    { name:'HMAC', hash:'SHA-256' }, false, ['sign']);
+  const sig = await crypto.subtle.sign('HMAC', key, enc.encode(message));
+  return Array.from(new Uint8Array(sig)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function getKlines(symbol, interval, limit=210) {
+  try {
+    const data = await binanceFetch('/api/v3/klines', { symbol, interval, limit });
+    if (!Array.isArray(data)) return null;
+    return data.map(k=>({ open:+k[1], high:+k[2], low:+k[3], close:+k[4], volume:+k[5] }));
+  } catch(e) { return null; }
+}
+
+async function getPrice(symbol) {
+  try {
+    const data = await binanceFetch('/api/v3/ticker/price', { symbol });
+    return parseFloat(data.price || 0);
+  } catch(e) { return 0; }
+}
+
+async function getLiveBalance() {
+  try {
+    const data = await binanceFetch('/api/v3/account', {}, true);
+    const usdc = data.balances?.find(b=>b.asset==='USDC');
+    return parseFloat(usdc?.free || 0);
+  } catch(e) { return 0; }
+}
+
+async function placeOrder(symbol, side, quantity, price) {
+  if (CONFIG.mode === 'DEMO') {
+    addLog(`[DEMO] ${side} ${quantity.toFixed(6)} ${symbol} @ ${price.toFixed(4)}`, 'TRADE');
+    return { orderId:'DEMO_'+Date.now(), status:'FILLED' };
+  }
+  try {
+    const params = { symbol, side, type:'LIMIT', timeInForce:'GTC',
+      quantity: quantity.toFixed(6), price: price.toFixed(8) };
+    return await binanceFetch('/api/v3/order', params, true);
+  } catch(e) { addLog(`Error orden: ${e.message}`, 'ERROR'); return null; }
+}//  INDICADORES 
+function calcEMA(data, period) {
+  const k = 2/(period+1); let ema = data[0];
+  return data.map((v,i) => i===0 ? ema : (ema = v*k+ema*(1-k)));
+}
+
+function calcRSI(closes, period=14) {
+  if (closes.length < period+1) return 50;
+  let ag=0, al=0;
+  for (let i=1; i<=period; i++) {
+    const d=closes[i]-closes[i-1];
+    if(d>0) ag+=d; else al-=d;
+  }
+  ag/=period; al/=period;
+  for (let i=period+1; i<closes.length; i++) {
+    const d=closes[i]-closes[i-1];
+    ag=(ag*(period-1)+(d>0?d:0))/period;
+    al=(al*(period-1)+(d<0?-d:0))/period;
+  }
+  return al===0 ? 100 : 100-(100/(1+ag/al));
+}
+
+function calcMACD(closes) {
+  const e12=calcEMA(closes,12), e26=calcEMA(closes,26);
+  const ml=e12.map((v,i)=>v-e26[i]);
+  const sig=calcEMA(ml.slice(26),9);
+  const l=ml.length-1, s=sig.length-1;
+  return { macd:ml[l], signal:sig[s], histogram:ml[l]-sig[s], prevHistogram:ml[l-1]-sig[s-1] };
+}
+
+function calcATR(candles, period=14) {
+  const trs=[];
+  for(let i=1;i<candles.length;i++){
+    trs.push(Math.max(
+      candles[i].high-candles[i].low,
+      Math.abs(candles[i].high-candles[i-1].close),
+      Math.abs(candles[i].low-candles[i-1].close)
+    ));
+  }
+  let atr=trs.slice(0,period).reduce((a,b)=>a+b,0)/period;
+  for(let i=period;i<trs.length;i++) atr=(atr*(period-1)+trs[i])/period;
+  return atr;
+}
+
+function calcADX(candles, period=14) {
+  if(candles.length<period*2) return {adx:0,diPlus:0,diMinus:0};
+  const dp=[],dm=[],tr=[];
+  for(let i=1;i<candles.length;i++){
+    const up=candles[i].high-candles[i-1].high;
+    const dn=candles[i-1].low-candles[i].low;
+    dp.push(up>dn&&up>0?up:0);
+    dm.push(dn>up&&dn>0?dn:0);
+    tr.push(Math.max(candles[i].high-candles[i].low,
+      Math.abs(candles[i].high-candles[i-1].close),
+      Math.abs(candles[i].low-candles[i-1].close)));
+  }
+  let sTR=tr.slice(0,period).reduce((a,b)=>a+b,0);
+  let sDp=dp.slice(0,period).reduce((a,b)=>a+b,0);
+  let sDm=dm.slice(0,period).reduce((a,b)=>a+b,0);
+  const dx=[];
+  for(let i=period;i<tr.length;i++){
+    sTR=sTR-sTR/period+tr[i];
+    sDp=sDp-sDp/period+dp[i];
+    sDm=sDm-sDm/period+dm[i];
+    const diP=(sDp/sTR)*100, diM=(sDm/sTR)*100;
+    dx.push({dxv:Math.abs(diP-diM)/(diP+diM)*100,diP,diM});
+  }
+  const last=dx[dx.length-1];
+  return { adx:dx.slice(-period).reduce((a,b)=>a+b.dxv,0)/period, diPlus:last.diP, diMinus:last.diM };
+}
+
+function calcBB(closes, period=20, std=2) {
+  const sl=closes.slice(-period);
+  const mid=sl.reduce((a,b)=>a+b,0)/period;
+  const variance=sl.reduce((a,b)=>a+(b-mid)**2,0)/period;
+  const s=Math.sqrt(variance);
+  return {upper:mid+std*s, middle:mid, lower:mid-std*s};
+}
+
+function calcVolEMA(candles, period=20) {
+  const vols=candles.map(c=>c.volume);
+  const ema=calcEMA(vols,period);
+  return ema[ema.length-1];
+}
+
+//  SEÑALES 
+function analyzeCandles(candles, symbol) {
+  if(!candles||candles.length<60) return null;
+  const closes=candles.map(c=>c.close);
+  const cur=candles[candles.length-1];
+  const price=cur.close;
+
+  const ema9=calcEMA(closes,9), ema21=calcEMA(closes,21), ema200=calcEMA(closes,200);
+  const e9=ema9[ema9.length-1], e21=ema21[ema21.length-1], e200=ema200[ema200.length-1];
+  const pe9=ema9[ema9.length-2], pe21=ema21[ema21.length-2];
+
+  const rsi=calcRSI(closes,14);
+  const macd=calcMACD(closes);
+  const adx=calcADX(candles,14);
+  const atr=calcATR(candles,14);
+  const volRatio=cur.volume/calcVolEMA(candles,20);
+
+  // TREND MODE
+  if(adx.adx>=25){
+    const crossUp=(pe9<=pe21&&e9>e21)||e9>e21;
+    if(crossUp && rsi>50 && macd.histogram>0 && price>e200*0.99 && volRatio>=1.1 && adx.diPlus>adx.diMinus){
+      return {
+        signal:'LONG', mode:'TREND',
+        reason:`TREND ADX:${adx.adx.toFixed(1)} RSI:${rsi.toFixed(1)} VOL:${volRatio.toFixed(2)}x`,
+        price, atr,
+        tp1: price+atr*1.7, tp2: price+atr*2.7, sl: price-atr*1.0,
+        indicators:{rsi,adx:adx.adx,volRatio}
+      };
+    }
+  }
+
+  // REVERSION MODE
+  if(adx.adx<20){
+    const bb=calcBB(closes,20,2);
+    if(rsi<35 && price<=bb.lower*1.005 && macd.histogram>macd.prevHistogram && macd.histogram<0 && volRatio>=1.0){
+      return {
+        signal:'LONG', mode:'REVERSION',
+        reason:`REVERSION ADX:${adx.adx.toFixed(1)} RSI:${rsi.toFixed(1)} BB_LOW`,
+        price, atr,
+        tp1: bb.middle*1.002, tp2: bb.upper*0.998, sl: price-atr*0.8,
+        indicators:{rsi,adx:adx.adx,volRatio}
+      };
+    }
+  }
+  return null;
+}//  GESTIÓN DE POSICIONES 
+function getOpen()       { return state.slots.filter(s=>s.status==='OPEN'); }
+function hasPair(sym)    { return getOpen().some(s=>s.symbol===sym); }
+function slotsOk()       { return getOpen().length < CONFIG.maxSlots; }
+
+function correlationOk(symbol) {
+  const large=['BTCUSDC','ETHUSDC','BNBUSDC'];
+  if(large.includes(symbol) && getOpen().filter(s=>large.includes(s.symbol)).length>=2) return false;
+  return true;
+}
+
+async function openPosition(symbol, signal) {
+  if(!slotsOk())           { addLog(`Sin slots: ${symbol}`,'WARN'); return; }
+  if(hasPair(symbol))      { return; }
+  if(!correlationOk(symbol)){ addLog(`Correlación bloqueada: ${symbol}`,'WARN'); return; }
+  if(state.btcChange1h<-3) { addLog(`BTC cayendo >3% — pausando`,'WARN'); return; }
+
+  let balance = CONFIG.mode==='DEMO' ? state.balance.free : await getLiveBalance();
+  const slotValue = balance * CONFIG.slotPct;
+  if(slotValue<5){ addLog(`Balance insuficiente`,'WARN'); return; }
+
+  const qty = slotValue / signal.price;
+  addLog(` ABRIENDO ${symbol} | ${signal.reason} | Precio:${signal.price.toFixed(4)} SL:${signal.sl.toFixed(4)} TP1:${signal.tp1.toFixed(4)}`,'TRADE');
+
+  const order = await placeOrder(symbol,'BUY',qty,signal.price);
+  if(!order) return;
+
+  const slot = {
+    id:Date.now(), symbol, side:'LONG',
+    entryPrice:signal.price, qty, slotValue,
+    tp1:signal.tp1, tp2:signal.tp2, sl:signal.sl,
+    atr:signal.atr, mode:signal.mode, reason:signal.reason,
+    status:'OPEN', openTime:Date.now(), tp1Hit:false,
+    indicators:signal.indicators, pnl:0,
+  };
+  state.slots.push(slot);
+
+  if(CONFIG.mode==='DEMO'){
+    state.balance.free    -= slotValue;
+    state.balance.inTrade += slotValue;
+  }
+  saveState();
+  renderUI();
+}
+
+async function closePosition(slot, price, reason) {
+  const pnlPct=(price-slot.entryPrice)/slot.entryPrice*100;
+  const pnlUSD=(price-slot.entryPrice)*slot.qty;
+  const won=pnlPct>0;
+
+  addLog(`${won?'':''} CERRANDO ${slot.symbol} | ${reason} | PnL:${pnlPct.toFixed(2)}%`,'TRADE');
+  await placeOrder(slot.symbol,'SELL',slot.qty,price);
+
+  slot.status='CLOSED'; slot.closeTime=Date.now();
+  slot.closePrice=price; slot.closePnl=pnlPct; slot.closeReason=reason;
+
+  state.stats.trades++;
+  if(won) state.stats.wins++; else state.stats.losses++;
+  state.stats.totalPnl+=pnlUSD;
+
+  if(CONFIG.mode==='DEMO'){
+    const ret=slot.slotValue*(1+pnlPct/100);
+    state.balance.free    +=ret;
+    state.balance.inTrade -=slot.slotValue;
+    state.balance.total    =state.balance.free+state.balance.inTrade;
+  }
+
+  state.closedTrades.unshift({...slot});
+  if(state.closedTrades.length>100) state.closedTrades.pop();
+  state.slots=state.slots.filter(s=>s.id!==slot.id);
+  saveState();
+  renderUI();
+
+  // Notificación
+  if('Notification' in window && Notification.permission==='granted'){
+    new Notification(`${won?'':''} ${slot.symbol} ${reason}`,{
+      body:`PnL: ${pnlPct>=0?'+':''}${pnlPct.toFixed(2)}%`,
+    });
+  }
+}
+
+async function checkExits() {
+  const open=getOpen();
+  for(const slot of open){
+    const price=await getPrice(slot.symbol);
+    if(!price) continue;
+    slot.pnl=(price-slot.entryPrice)/slot.entryPrice*100;
+    const elapsed=(Date.now()-slot.openTime)/60000;
+    const timeout=CONFIG.timeframe==='5m'?120:CONFIG.timeframe==='15m'?240:480;
+    let closeReason=null;
+
+    if(price<=slot.sl){
+      closeReason='STOP_LOSS';
+    } else if(!slot.tp1Hit&&price>=slot.tp1){
+      slot.tp1Hit=true;
+      slot.sl=slot.entryPrice;
+      slot.slotValue*=0.5;
+      slot.qty*=0.5;
+      addLog(` TP1 ${slot.symbol} @ ${price.toFixed(4)} (+${slot.pnl.toFixed(2)}%) SLbreakeven`,'TRADE');
+      saveState();
+      continue;
+    } else if(slot.tp1Hit&&price>=slot.tp2){
+      closeReason='TP2';
+    } else if(elapsed>=timeout){
+      closeReason='TIMEOUT';
+    }
+
+    if(closeReason) await closePosition(slot,price,closeReason);
+    await sleep(300);
+  }
+}
+
+async function updateBTC() {
+  try {
+    const candles=await getKlines('BTCUSDC','1h',3);
+    if(candles&&candles.length>=2){
+      state.btcPrice=candles[candles.length-1].close;
+      state.btcChange1h=(state.btcPrice-candles[candles.length-2].close)/candles[candles.length-2].close*100;
+    }
+  } catch(e){}
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+//  CICLO PRINCIPAL 
+async function scanCycle() {
+  if(!state.running) return;
+  state.lastScan=new Date().toISOString();
+  addLog(` Escaneando ${SCAN_PAIRS.length} pares...`,'SCAN');
+
+  await updateBTC();
+  await checkExits();
+
+  if(!slotsOk()){
+    addLog(`Slots llenos (${getOpen().length}/${CONFIG.maxSlots})`,'INFO');
+    renderUI(); return;
+  }
+
+  let found=0;
+  for(const pair of SCAN_PAIRS){
+    if(!state.running) break;
+    if(hasPair(pair)){ await sleep(100); continue; }
+
+    // volumen calculado de las velas
+
+    const candles=await getKlines(pair,CONFIG.timeframe,210);
+    if(!candles){ addLog(`SIN DATOS ${pair}`,'ERROR'); await sleep(200); continue; }
+
+    const vol24h=candles.slice(-96).reduce((a,c)=>a+c.volume*c.close,0);
+if(vol24h<100000){ await sleep(100); continue; }
+const signal=analyzeCandles(candles,pair);
+    if(signal){
+      found++;
+      addLog(` Señal ${pair}: ${signal.reason}`,'SIGNAL');
+      await openPosition(pair,signal);
+      if(!slotsOk()) break;
+    }
+    await sleep(300);
+  }
+
+  addLog(`Scan completo. Señales:${found} Slots:${getOpen().length}/${CONFIG.maxSlots}`,'SCAN');
+  renderUI();
+}//  CONTROLES 
+async function startBot() {
+  if(state.running){ showToast('Ya está corriendo'); return; }
+  if(CONFIG.mode==='LIVE'&&!API_KEY){ showToast('Añade API keys primero'); return; }
+  state.running=true;
+  await requestWakeLock();
+  if('Notification' in window) Notification.requestPermission();
+  addLog(' Bot INICIADO','SYSTEM');
+  updateStatusPill();
+  scanCycle();
+  scanTimer=setInterval(scanCycle, CONFIG.scanInterval);
+}
+
+function stopBot() {
+  state.running=false;
+  if(scanTimer) clearInterval(scanTimer);
+  if(wakeLock) wakeLock.release();
+  document.getElementById('wakeLockStatus').textContent='INACTIVO';
+  addLog(' Bot DETENIDO','SYSTEM');
+  updateStatusPill();
+}
+
+function setMode(mode) {
+  if(mode==='LIVE'){
+    if(!API_KEY){ showToast('Añade API keys primero'); return; }
+    if(!confirm(' MODO LIVE — operará con dinero REAL en Binance.\n¿Confirmas?')) return;
+  }
+  CONFIG.mode=mode;
+  localStorage.setItem('zm_mode',mode);
+  document.getElementById('modeBadge').textContent=mode;
+  document.getElementById('modeBadge').className='mode-badge '+mode.toLowerCase();
+  document.getElementById('modeHint').textContent=mode==='DEMO'?'Sin dinero real — practica gratis':' OPERANDO CON DINERO REAL';
+  showToast('Modo: '+mode);
+}
+
+function resetDemo() {
+  if(!confirm('¿Resetear demo a 1000 USDC?')) return;
+  state.balance={total:1000,free:1000,inTrade:0};
+  state.stats={wins:0,losses:0,totalPnl:0,trades:0};
+  state.slots=[];
+  state.closedTrades=[];
+  state.log=[];
+  saveState();
+  renderUI();
+  showToast('Demo reseteado');
+}
+
+//  RENDER UI 
+function updateStatusPill() {
+  const pill=document.getElementById('statusPill');
+  const dot=document.getElementById('statusDot');
+  const txt=document.getElementById('statusText');
+  if(state.running){ pill.className='status-pill running'; dot.className='dot pulse'; txt.textContent='ACTIVO'; }
+  else { pill.className='status-pill stopped'; dot.className='dot'; txt.textContent='PARADO'; }
+}
+
+function renderUI() {
+  updateStatusPill();
+  document.getElementById('btcPrice').textContent=state.btcPrice?'$'+Number(state.btcPrice).toLocaleString('es',{maximumFractionDigits:0}):'—';
+  const chgEl=document.getElementById('btcChg');
+  chgEl.textContent=(state.btcChange1h>=0?'+':'')+state.btcChange1h.toFixed(2)+'%';
+  chgEl.className='chg '+(state.btcChange1h>=0?'pos':'neg');
+  if(state.lastScan) document.getElementById('lastScan').textContent=new Date(state.lastScan).toLocaleTimeString('es');
+
+  document.getElementById('statBalance').textContent=(state.balance.total||0).toFixed(1);
+  document.getElementById('statTrades').textContent=state.stats.trades||0;
+  const wr=state.stats.trades>0?Math.round(state.stats.wins/state.stats.trades*100):0;
+  const wrEl=document.getElementById('statWinRate');
+  wrEl.textContent=wr+'%';
+  wrEl.className='stat-val '+(wr>=55?'green':wr>=45?'warn':'red');
+  document.getElementById('winrateFill').style.width=wr+'%';
+  const pnl=state.stats.totalPnl||0;
+  const pnlEl=document.getElementById('statPnl');
+  pnlEl.textContent=(pnl>=0?'+':'')+pnl.toFixed(2);
+  pnlEl.className='stat-val '+(pnl>=0?'green':'red');
+
+  const open=getOpen();
+  document.getElementById('slotsCount').textContent=open.length+'/'+CONFIG.maxSlots;
+
+  // Slots
+  const sl=document.getElementById('slotsList');
+  if(!open.length){ sl.innerHTML='<div class="empty">Sin posiciones.<br>El bot está escaneando 30 pares...</div>'; }
+  else { sl.innerHTML=open.map(s=>{
+    const pnl=s.pnl||0; const pc=pnl>=0?'var(--green)':'var(--red)';
+    const tp1p=((s.tp1-s.entryPrice)/s.entryPrice*100).toFixed(1);
+    const slp=((s.sl-s.entryPrice)/s.entryPrice*100).toFixed(1);
+    const elapsed=Math.round((Date.now()-s.openTime)/60000);
+    const mc=s.mode==='TREND'?'#00c4ff':'#ffaa00';
+    return `<div style="background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:10px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+        <b style="font-size:14px;">${s.symbol}</b>
+        <span style="font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(0,0,0,.3);color:${mc};">${s.mode}</span>
+      </div>
+      <div style="font-size:9px;color:var(--text2);font-family:var(--mono);margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.reason}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px 8px;margin-bottom:8px;font-size:10px;">
+        <div><span style="color:var(--text2);">ENTRADA </span><span style="font-family:var(--mono);font-weight:700;">${s.entryPrice.toFixed(4)}</span></div>
+        <div><span style="color:var(--text2);">TP1 </span><span style="font-family:var(--mono);font-weight:700;color:var(--green);">+${tp1p}%</span></div>
+        <div><span style="color:var(--text2);">SL </span><span style="font-family:var(--mono);font-weight:700;color:var(--red);">${slp}%</span></div>
+        <div><span style="color:var(--text2);">PNL </span><span style="font-family:var(--mono);font-weight:700;color:${pc};">${pnl>=0?'+':''}${pnl.toFixed(2)}%</span></div>
+        <div><span style="color:var(--text2);">USDC </span><span style="font-family:var(--mono);font-weight:700;">${s.slotValue.toFixed(1)}</span></div>
+        <div><span style="color:var(--text2);">MIN </span><span style="font-family:var(--mono);font-weight:700;">${elapsed}</span></div>
+      </div>
+      <button onclick="manualClose(${s.id})" style="width:100%;padding:6px;background:rgba(255,68,102,.1);border:1px solid rgba(255,68,102,.3);border-radius:6px;color:var(--red);font-size:11px;font-weight:600;cursor:pointer;"> CERRAR MANUALMENTE</button>
+    </div>`;
+  }).join('');}
+
+  // Historial
+  document.getElementById('histCount').textContent=state.closedTrades.length;
+  const tl=document.getElementById('tradesList');
+  if(!state.closedTrades.length){ tl.innerHTML='<div class="empty">Sin trades cerrados aún.</div>'; }
+  else { tl.innerHTML=state.closedTrades.slice(0,30).map(t=>{
+    const pnl=t.closePnl||0; const pc=pnl>=0?'green':'red';
+    const time=t.closeTime?new Date(t.closeTime).toLocaleTimeString('es'):'—';
+    return `<div style="display:flex;justify-content:space-between;padding:9px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:5px;">
+      <div><div style="font-size:12px;font-weight:700;">${t.symbol}</div><div style="font-size:9px;color:var(--text2);font-family:var(--mono);">${t.closeReason} · ${time}</div></div>
+      <div style="text-align:right;"><div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--${pc});">${pnl>=0?'+':''}${pnl.toFixed(2)}%</div><div style="font-size:9px;color:var(--text2);">${(t.slotValue||0).toFixed(1)} USDC</div></div>
+    </div>`;
+  }).join('');}
+}
+
+function renderLog(logs) {
+  const el=document.getElementById('logContainer');
+  if(!logs.length){ el.innerHTML='<div style="text-align:center;color:var(--text2);font-size:11px;padding:20px">Sin logs aún</div>'; return; }
+  const colors={TRADE:'var(--accent)',SIGNAL:'var(--accent2)',ERROR:'var(--red)',WARN:'var(--warn)',SYSTEM:'#888',SCAN:'var(--text2)',INFO:'var(--text)'};
+  el.innerHTML=logs.slice(0,40).map(l=>`<div style="font-family:var(--mono);font-size:10px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:8px;">
+    <span style="color:var(--text2);white-space:nowrap;">${new Date(l.time).toLocaleTimeString('es')}</span>
+    <span style="color:${colors[l.type]||'var(--text)'};word-break:break-all;">${l.msg}</span>
+  </div>`).join('');
+}
+
+async function manualClose(id) {
+  const slot=state.slots.find(s=>s.id===id);
+  if(!slot) return;
+  const price=await getPrice(slot.symbol);
+  await closePosition(slot, price||slot.entryPrice, 'MANUAL');
+}
+
+function showTab(name,el) {
+  ['slots','history','config','log'].forEach(t=>document.getElementById('tab-'+t).style.display=t===name?'block':'none');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.style.opacity='1';
+  setTimeout(()=>t.style.opacity='0',2500);
+}
+
+//  INIT 
+window.onload=()=>{
+  if(API_KEY) document.getElementById('keysStatus').textContent=' Keys guardadas — LIVE disponible';
+  document.getElementById('modeBadge').textContent=CONFIG.mode;
+  document.getElementById('modeBadge').className='mode-badge '+CONFIG.mode.toLowerCase();
+  document.getElementById('modeHint').textContent=CONFIG.mode==='DEMO'?'Sin dinero real — practica gratis':' OPERANDO CON DINERO REAL';
+  document.getElementById('cfgTimeframe').value=CONFIG.timeframe;
+  document.getElementById('cfgSlots').value=CONFIG.maxSlots;
+  document.getElementById('cfgPct').value=Math.round(CONFIG.slotPct*100);
+  document.getElementById('cfgPctVal').textContent=Math.round(CONFIG.slotPct*100)+'%';
+  document.getElementById('cfgScan').value=CONFIG.scanInterval;
+  renderUI();
+};
+</script>
+</body>
+</html>
