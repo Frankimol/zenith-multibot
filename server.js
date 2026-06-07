@@ -533,7 +533,14 @@ app.post('/reset-demo', (req,res) => {
   addLog('🔄 Demo reseteado a 1000 USDC', 'SYSTEM');
   res.json({ok:true});
 });
-
+app.get('/test-binance', async (req,res) => {
+  try {
+    const data = await binanceRequest('/api/v3/ticker/price', { symbol:'BTCUSDC' });
+    res.json({ ok:true, data });
+  } catch(e) {
+    res.json({ ok:false, error: e.message });
+  }
+});
 app.get('/ping', (req,res) => res.send('pong'));
 
 // ── ARRANQUE ────────────────────────────────────────────────────
