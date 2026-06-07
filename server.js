@@ -262,10 +262,10 @@ function analyzeCandles(candles, symbol) {
   if (adx.adx >= 25) {
     const emaCrossUp    = prevE9 <= prevE21 && e9 > e21;
     const emaTrendUp    = e9 > e21;
-    const rsiOk         = rsi > 52;
-    const macdOk        = macd.histogram > 0 && macd.histogram > macd.prevHistogram;
-    const priceAbove200 = price > e200;
-    const volOk         = volRatio >= 1.2;
+    const rsiOk         = rsi > 50;
+    const macdOk        = macd.histogram > 0;
+    const priceAbove200 = price > e200 * 0.99;
+    const volOk         = volRatio >= 1.1;
     const diOk          = adx.diPlus > adx.diMinus;
 
     if ((emaCrossUp || emaTrendUp) && rsiOk && macdOk && priceAbove200 && volOk && diOk) {
