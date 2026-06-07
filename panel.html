@@ -267,7 +267,7 @@ function addLog(msg, type='INFO') {
 
 //  BINANCE API 
 async function binanceFetch(path, params={}, signed=false) {
-  let query = Object.entries(params).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
+  let query = Object.entries(params).map(([k,v])=>`${k}=${v}`).join('&');
   if (signed) {
     params.timestamp = Date.now();
     params.recvWindow = 5000;
