@@ -535,7 +535,7 @@ app.post('/reset-demo', (req,res) => {
 });
 app.get('/test-binance', async (req,res) => {
   try {
-    const data = await binanceRequest('/api/v3/ticker/price', { symbol:'BTCUSDC' });
+    const data = await binanceRequest('/api/v3/klines', { symbol:'BTCUSDC', interval:'15m', limit:'3' });
     res.json({ ok:true, data });
   } catch(e) {
     res.json({ ok:false, error: e.message });
