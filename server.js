@@ -269,7 +269,7 @@ function analyzeCandles(candles, symbol) {
     const diOk          = adx.diPlus > adx.diMinus;
 
     if (!rsiOk || !macdOk || !priceAbove200 || !volOk || !diOk) {
-      if (Math.random() < 0.05) addLog(`DIAG ${symbol} ADX:${adx.adx.toFixed(1)} RSI:${rsi.toFixed(1)} MACD:${macd.histogram.toFixed(4)} VOL:${volRatio.toFixed(2)} DI+:${adx.diPlus.toFixed(1)} DI-:${adx.diMinus.toFixed(1)} EMA9>21:${e9>e21} P>200:${priceAbove200}`, 'INFO');
+      if (Math.random() < 0.5) addLog(`DIAG ${symbol} ADX:${adx.adx.toFixed(1)} RSI:${rsi.toFixed(1)} MACD:${macd.histogram.toFixed(4)} VOL:${volRatio.toFixed(2)} DI+:${adx.diPlus.toFixed(1)} DI-:${adx.diMinus.toFixed(1)} EMA9>21:${e9>e21} P>200:${priceAbove200}`, 'INFO');
     }
     if ((emaCrossUp || emaTrendUp) && rsiOk && macdOk && priceAbove200 && volOk && diOk) {
       return {
