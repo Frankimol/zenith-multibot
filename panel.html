@@ -278,18 +278,25 @@ function addLog(msg, type='INFO') {
 
 //  BINANCE API 
 async function binanceFetch(path, params={}, signed=false) {
-  let query = Object.entries(params).map(([k,v])=>`${k}=${v}`).join('&');
-  if (signed) {
-    params.timestamp = Date.now();
-    params.recvWindow = 5000;
-    query = Object.entries(params).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
-    const sig = await hmacSHA256(API_SECRET, query);
-    query += `&signature=${sig}`;
+  try {
+    if (signed) {
+      params.timestamp = Date.now();
+      params.recvWindow = 5000;
+      const query = Object.entries(params).map(([k,v])=>`${k}=${v}`).join('&');
+      const sig = await hmacSHA256(API_SECRET, query);
+      const url = `https://api.binance.com${path}?${query}&signature=${sig}`;
+      const res = await fetch(url, { headers:{'X-MBX-APIKEY':API_KEY} });
+      return await res.json();
+    } else {
+      const query = Object.entries(params).map(([k,v])=>`${k}=${v}`).join('&');
+      const url = `https://api.binance.com${path}${query?'?'+query:''}`;
+      const res = await fetch(url);
+      return await res.json();
+    }
+  } catch(e) {
+    addLog(`Fetch error ${path}: ${e.message}`,'ERROR');
+    return null;
   }
-  const url = `https://api.binance.com${path}${query?'?'+query:''}`;
-  const headers = { 'X-MBX-APIKEY': API_KEY };
-  const res = await fetch(url, { headers });
-  return await res.json();
 }
 
 async function hmacSHA256(secret, message) {
