@@ -289,8 +289,8 @@ async function binanceFetch(path, params={}, signed=false) {
       return await res.json();
     } else {
       const query = Object.entries(params).map(([k,v])=>`${k}=${v}`).join('&');
-      const url = `https://api.binance.com${path}${query?'?'+query:''}`;
-      const res = await fetch(url);
+      const url = `https://data-api.binance.vision${path}${query?'?'+query:''}`;
+const res = await fetch(url, { mode: 'cors' });
       return await res.json();
     }
   } catch(e) {
