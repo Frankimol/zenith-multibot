@@ -78,28 +78,24 @@
       <span id="statusText">PARADO</span>
     </div>
   </div>
-
   <div class="wake-bar">
-    <span> Wake Lock</span>
+    <span>🔒 Wake Lock</span>
     <strong id="wakeLockStatus">INACTIVO</strong>
   </div>
-
   <div class="card" id="apiCard">
-    <h3> BINANCE API KEYS</h3>
+    <h3>🔑 BINANCE API KEYS</h3>
     <div style="display:flex;flex-direction:column;gap:8px;">
       <input type="password" id="apiKey" placeholder="API Key (solo trading, sin retiros)">
       <input type="password" id="apiSecret" placeholder="API Secret">
-      <button class="btn-sm" onclick="saveKeys()" style="width:100%"> GUARDAR KEYS</button>
+      <button class="btn-sm" onclick="saveKeys()" style="width:100%">💾 GUARDAR KEYS</button>
     </div>
     <div style="font-size:10px;color:var(--text2);margin-top:8px;font-family:var(--mono);" id="keysStatus">Sin keys — modo DEMO activo</div>
   </div>
-
   <div class="btc-bar">
     <div><div class="lbl">BTC/USDC</div><div class="val" id="btcPrice">—</div></div>
     <div><div class="lbl">CAMBIO 1H</div><div><span class="chg" id="btcChg">—</span></div></div>
     <div><div class="lbl">ÚLTIMA SCAN</div><div class="val" style="font-size:10px;color:var(--text2)" id="lastScan">—</div></div>
   </div>
-
   <div class="stats-row">
     <div class="stat-card"><div class="stat-val blue" id="statBalance">—</div><div class="stat-lbl">BALANCE</div></div>
     <div class="stat-card"><div class="stat-val" id="statTrades">0</div><div class="stat-lbl">TRADES</div></div>
@@ -109,27 +105,23 @@
     </div>
     <div class="stat-card"><div class="stat-val" id="statPnl">0</div><div class="stat-lbl">PNL USDC</div></div>
   </div>
-
   <div class="mode-row">
     <div class="mode-badge demo" id="modeBadge">DEMO</div>
     <div class="mode-hint" id="modeHint">Sin dinero real — practica gratis</div>
   </div>
-
   <div class="control-row">
-    <button class="btn btn-start" onclick="startBot()"> INICIAR</button>
-    <button class="btn btn-stop"  onclick="stopBot()"> DETENER</button>
-    <button class="btn btn-demo"  onclick="setMode('DEMO')"> DEMO</button>
-    <button class="btn btn-live"  onclick="setMode('LIVE')"> LIVE</button>
-    <button class="btn btn-reset" onclick="resetDemo()"> RESET DEMO (1000 USDC)</button>
+    <button class="btn btn-start" onclick="startBot()">▶ INICIAR</button>
+    <button class="btn btn-stop"  onclick="stopBot()">■ DETENER</button>
+    <button class="btn btn-demo"  onclick="setMode('DEMO')">☁ DEMO</button>
+    <button class="btn btn-live"  onclick="setMode('LIVE')">⚡ LIVE</button>
+    <button class="btn btn-reset" onclick="resetDemo()">↺ RESET DEMO (1000 USDC)</button>
   </div>
-
   <div class="tabs">
     <div class="tab active" onclick="showTab('slots',this)">POSICIONES</div>
     <div class="tab" onclick="showTab('history',this)">HISTORIAL</div>
     <div class="tab" onclick="showTab('config',this)">CONFIG</div>
     <div class="tab" onclick="showTab('log',this)">LOG</div>
   </div>
-
   <div id="tab-slots">
     <div class="section-title">POSICIONES ABIERTAS <span id="slotsCount">0/4</span></div>
     <div id="slotsList"><div class="empty">Sin posiciones.<br>Inicia el bot para escanear 30 pares.</div></div>
@@ -156,32 +148,20 @@
             <option value="30000">30s</option><option value="60000" selected>1min</option><option value="180000">3min</option>
           </select></div>
       </div>
-      <button onclick="saveConfig()" style="width:100%;margin-top:10px;padding:10px;background:var(--bg3);border:1px solid var(--accent2);border-radius:8px;color:var(--accent2);font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;"> GUARDAR</button>
+      <button onclick="saveConfig()" style="width:100%;margin-top:10px;padding:10px;background:var(--bg3);border:1px solid var(--accent2);border-radius:8px;color:var(--accent2);font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;">💾 GUARDAR</button>
     </div>
     <div class="card" style="font-size:11px;color:var(--text2);line-height:1.8;font-family:var(--mono);">
       <div style="color:var(--accent2);font-size:10px;letter-spacing:2px;margin-bottom:10px;">LÓGICA ACTIVA</div>
-      <div> <b style="color:var(--text)">TREND</b> — ADX&gt;25 | EMA9&gt;21 | RSI&gt;50 | MACD | VOL&gt;1.1x</div>
-      <div> <b style="color:var(--text)">REVERSION</b> — ADX&lt;20 | RSI&lt;35 | BB_LOW | MACD</div>
-      <div> BTC&lt;-3%/1hpausa | TP1breakeven | Timeout 4h</div>
+      <div>🔵 <b style="color:var(--text)">TREND</b> — ADX&gt;25 | EMA9&gt;21 | RSI&gt;50 | MACD↑ | VOL&gt;1.1x</div>
+      <div>🟡 <b style="color:var(--text)">REVERSION</b> — ADX&lt;20 | RSI&lt;35 | BB_LOW | MACD↗</div>
+      <div>🛡️ BTC&lt;-3%/1h→pausa | TP1→breakeven | Timeout 4h</div>
     </div>
   </div>
   <div id="tab-log" style="display:none">
     <div class="card" id="logContainer"><div style="text-align:center;color:var(--text2);font-size:11px;padding:20px">Sin logs aún</div></div>
   </div>
 </div>
-<div class="toast" id="toast"></div><button onclick="testApi()" style="position:fixed;bottom:60px;right:10px;background:red;color:white;padding:10px;border:none;border-radius:8px;z-index:999;font-size:12px;">TEST API</button>
-<script>
-async function testApi() {
-  try {
-    const res = await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDC&interval=15m&limit=3');
-    const data = await res.json();
-    alert('OK: '+JSON.stringify(data[0][4]));
-  } catch(e) {
-    alert('ERROR: '+e.message);
-  }
-}
-</script><script>
-//  CONFIGURACIÓN 
+<div class="toast" id="toast"></div><script>
 const SCAN_PAIRS = [
   'BTCUSDC','ETHUSDC','BNBUSDC','SOLUSDC','XRPUSDC',
   'ADAUSDC','DOGEUSDC','AVAXUSDC','DOTUSDC','MATICUSDC',
@@ -191,9 +171,11 @@ const SCAN_PAIRS = [
   'GRTUSDC','ENJUSDC','CHZUSDC','ZILUSDC','BATUSDC'
 ];
 
+const BINANCE = 'https://data-api.binance.vision';
+
 let CONFIG = {
-  mode:         localStorage.getItem('zm_mode') || 'DEMO',
-  timeframe:    localStorage.getItem('zm_tf')   || '15m',
+  mode:         localStorage.getItem('zm_mode')  || 'DEMO',
+  timeframe:    localStorage.getItem('zm_tf')    || '15m',
   maxSlots:     parseInt(localStorage.getItem('zm_slots') || '4'),
   slotPct:      parseFloat(localStorage.getItem('zm_pct') || '0.20'),
   scanInterval: parseInt(localStorage.getItem('zm_scan')  || '60000'),
@@ -201,30 +183,30 @@ let CONFIG = {
 
 let state = {
   running:      false,
-  slots:        JSON.parse(localStorage.getItem('zm_openslots')   || '[]'),
-  closedTrades: JSON.parse(localStorage.getItem('zm_closed')      || '[]'),
-  balance:      JSON.parse(localStorage.getItem('zm_balance')     || '{"total":1000,"free":1000,"inTrade":0}'),
-  stats:        JSON.parse(localStorage.getItem('zm_stats')       || '{"wins":0,"losses":0,"totalPnl":0,"trades":0}'),
+  slots:        JSON.parse(localStorage.getItem('zm_slots2')   || '[]'),
+  closedTrades: JSON.parse(localStorage.getItem('zm_closed')   || '[]'),
+  balance:      JSON.parse(localStorage.getItem('zm_balance')  || '{"total":1000,"free":1000,"inTrade":0}'),
+  stats:        JSON.parse(localStorage.getItem('zm_stats')    || '{"wins":0,"losses":0,"totalPnl":0,"trades":0}'),
   log:          [],
   btcPrice:     0,
   btcChange1h:  0,
   lastScan:     null,
 };
 
-let scanTimer    = null;
-let wakeLock     = null;
-let API_KEY      = localStorage.getItem('zm_apikey')    || '';
-let API_SECRET   = localStorage.getItem('zm_apisecret') || '';
+let scanTimer  = null;
+let wakeLock   = null;
+let API_KEY    = localStorage.getItem('zm_apikey')    || '';
+let API_SECRET = localStorage.getItem('zm_apisecret') || '';
 
-//  WAKE LOCK 
+// ── WAKE LOCK ────────────────────────────────────────────────────
 async function requestWakeLock() {
   try {
     if ('wakeLock' in navigator) {
       wakeLock = await navigator.wakeLock.request('screen');
-      document.getElementById('wakeLockStatus').textContent = 'ACTIVO ';
+      document.getElementById('wakeLockStatus').textContent = 'ACTIVO ✓';
       wakeLock.addEventListener('release', () => {
         document.getElementById('wakeLockStatus').textContent = 'LIBERADO';
-        if (state.running) requestWakeLock();
+        if (state.running) setTimeout(requestWakeLock, 1000);
       });
     } else {
       document.getElementById('wakeLockStatus').textContent = 'NO SOPORTADO';
@@ -235,29 +217,29 @@ async function requestWakeLock() {
 }
 
 document.addEventListener('visibilitychange', async () => {
-  if (wakeLock !== null && document.visibilityState === 'visible' && state.running) {
+  if (document.visibilityState === 'visible' && state.running) {
     await requestWakeLock();
   }
 });
 
-//  PERSISTENCIA 
+// ── PERSISTENCIA ─────────────────────────────────────────────────
 function saveState() {
-  localStorage.setItem('zm_openslots', JSON.stringify(state.slots));
-  localStorage.setItem('zm_closed',    JSON.stringify(state.closedTrades.slice(0,50)));
-  localStorage.setItem('zm_balance',   JSON.stringify(state.balance));
-  localStorage.setItem('zm_stats',     JSON.stringify(state.stats));
+  localStorage.setItem('zm_slots2',  JSON.stringify(state.slots));
+  localStorage.setItem('zm_closed',  JSON.stringify(state.closedTrades.slice(0,50)));
+  localStorage.setItem('zm_balance', JSON.stringify(state.balance));
+  localStorage.setItem('zm_stats',   JSON.stringify(state.stats));
 }
 
 function saveConfig() {
   CONFIG.timeframe    = document.getElementById('cfgTimeframe').value;
   CONFIG.maxSlots     = parseInt(document.getElementById('cfgSlots').value);
-  CONFIG.slotPct      = parseInt(document.getElementById('cfgPct').value) / 100;
+  CONFIG.slotPct      = parseInt(document.getElementById('cfgPct').value)/100;
   CONFIG.scanInterval = parseInt(document.getElementById('cfgScan').value);
   localStorage.setItem('zm_tf',    CONFIG.timeframe);
   localStorage.setItem('zm_slots', CONFIG.maxSlots);
   localStorage.setItem('zm_pct',   CONFIG.slotPct);
   localStorage.setItem('zm_scan',  CONFIG.scanInterval);
-  showToast(' Config guardada');
+  showToast('✓ Config guardada');
 }
 
 function saveKeys() {
@@ -265,112 +247,112 @@ function saveKeys() {
   API_SECRET = document.getElementById('apiSecret').value.trim();
   localStorage.setItem('zm_apikey',    API_KEY);
   localStorage.setItem('zm_apisecret', API_SECRET);
-  document.getElementById('keysStatus').textContent = API_KEY ? ' Keys guardadas — LIVE disponible' : 'Sin keys — modo DEMO activo';
-  showToast(' Keys guardadas');
+  document.getElementById('keysStatus').textContent = API_KEY ? '✓ Keys guardadas — LIVE disponible' : 'Sin keys — modo DEMO activo';
+  showToast('✓ Keys guardadas');
 }
 
-//  LOG 
+// ── LOG ──────────────────────────────────────────────────────────
 function addLog(msg, type='INFO') {
   state.log.unshift({ time: new Date().toISOString(), msg, type });
   if (state.log.length > 100) state.log.pop();
   renderLog(state.log);
 }
 
-//  BINANCE API 
+// ── BINANCE API ──────────────────────────────────────────────────
 async function binanceFetch(path, params={}, signed=false) {
   try {
+    let query = Object.entries(params).map(([k,v])=>`${k}=${v}`).join('&');
+    let url;
     if (signed) {
-      params.timestamp = Date.now();
+      params.timestamp  = Date.now();
       params.recvWindow = 5000;
-      const query = Object.entries(params).map(([k,v])=>`${k}=${v}`).join('&');
+      query = Object.entries(params).map(([k,v])=>`${k}=${v}`).join('&');
       const sig = await hmacSHA256(API_SECRET, query);
-      const url = `https://api.binance.com${path}?${query}&signature=${sig}`;
-      const res = await fetch(url, { headers:{'X-MBX-APIKEY':API_KEY} });
+      url = `https://api.binance.com${path}?${query}&signature=${sig}`;
+      const res = await fetch(url, { headers:{'X-MBX-APIKEY': API_KEY} });
       return await res.json();
     } else {
-      const query = Object.entries(params).map(([k,v])=>`${k}=${v}`).join('&');
-      const url = `https://data-api.binance.vision${path}${query?'?'+query:''}`;
-const res = await fetch(url, { mode: 'cors' });
+      url = `${BINANCE}${path}${query?'?'+query:''}`;
+      const res = await fetch(url);
       return await res.json();
     }
   } catch(e) {
-    addLog(`Fetch error ${path}: ${e.message}`,'ERROR');
+    addLog(`Error API: ${e.message}`,'ERROR');
     return null;
   }
 }
 
 async function hmacSHA256(secret, message) {
   const enc = new TextEncoder();
-  const key = await crypto.subtle.importKey('raw', enc.encode(secret),
-    { name:'HMAC', hash:'SHA-256' }, false, ['sign']);
+  const key = await crypto.subtle.importKey(
+    'raw', enc.encode(secret), {name:'HMAC',hash:'SHA-256'}, false, ['sign']);
   const sig = await crypto.subtle.sign('HMAC', key, enc.encode(message));
   return Array.from(new Uint8Array(sig)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 
 async function getKlines(symbol, interval, limit=210) {
   try {
-    const data = await binanceFetch('/api/v3/klines', { symbol, interval, limit });
-    if (!Array.isArray(data)) return null;
-    return data.map(k=>({ open:+k[1], high:+k[2], low:+k[3], close:+k[4], volume:+k[5] }));
+    const data = await binanceFetch('/api/v3/klines', {symbol, interval, limit});
+    if (!Array.isArray(data)) { addLog(`Klines error ${symbol}: ${JSON.stringify(data)}`,'ERROR'); return null; }
+    return data.map(k=>({open:+k[1],high:+k[2],low:+k[3],close:+k[4],volume:+k[5]}));
   } catch(e) { return null; }
 }
 
 async function getPrice(symbol) {
   try {
-    const data = await binanceFetch('/api/v3/ticker/price', { symbol });
-    return parseFloat(data.price || 0);
+    const data = await binanceFetch('/api/v3/ticker/price', {symbol});
+    return parseFloat(data?.price || 0);
   } catch(e) { return 0; }
 }
 
 async function getLiveBalance() {
   try {
     const data = await binanceFetch('/api/v3/account', {}, true);
-    const usdc = data.balances?.find(b=>b.asset==='USDC');
+    const usdc = data?.balances?.find(b=>b.asset==='USDC');
     return parseFloat(usdc?.free || 0);
   } catch(e) { return 0; }
 }
 
 async function placeOrder(symbol, side, quantity, price) {
-  if (CONFIG.mode === 'DEMO') {
-    addLog(`[DEMO] ${side} ${quantity.toFixed(6)} ${symbol} @ ${price.toFixed(4)}`, 'TRADE');
+  if (CONFIG.mode==='DEMO') {
+    addLog(`[DEMO] ${side} ${quantity.toFixed(6)} ${symbol} @ ${price.toFixed(4)}`,'TRADE');
     return { orderId:'DEMO_'+Date.now(), status:'FILLED' };
   }
   try {
-    const params = { symbol, side, type:'LIMIT', timeInForce:'GTC',
-      quantity: quantity.toFixed(6), price: price.toFixed(8) };
+    const params = {symbol, side, type:'LIMIT', timeInForce:'GTC',
+      quantity:quantity.toFixed(6), price:price.toFixed(8)};
     return await binanceFetch('/api/v3/order', params, true);
-  } catch(e) { addLog(`Error orden: ${e.message}`, 'ERROR'); return null; }
-}//  INDICADORES 
+  } catch(e) { addLog(`Error orden: ${e.message}`,'ERROR'); return null; }
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }// ── INDICADORES ──────────────────────────────────────────────────
 function calcEMA(data, period) {
-  const k = 2/(period+1); let ema = data[0];
-  return data.map((v,i) => i===0 ? ema : (ema = v*k+ema*(1-k)));
+  const k=2/(period+1); let ema=data[0];
+  return data.map((v,i)=>i===0?ema:(ema=v*k+ema*(1-k)));
 }
 
 function calcRSI(closes, period=14) {
-  if (closes.length < period+1) return 50;
-  let ag=0, al=0;
-  for (let i=1; i<=period; i++) {
-    const d=closes[i]-closes[i-1];
-    if(d>0) ag+=d; else al-=d;
-  }
+  if(closes.length<period+1) return 50;
+  let ag=0,al=0;
+  for(let i=1;i<=period;i++){const d=closes[i]-closes[i-1];if(d>0)ag+=d;else al-=d;}
   ag/=period; al/=period;
-  for (let i=period+1; i<closes.length; i++) {
+  for(let i=period+1;i<closes.length;i++){
     const d=closes[i]-closes[i-1];
     ag=(ag*(period-1)+(d>0?d:0))/period;
     al=(al*(period-1)+(d<0?-d:0))/period;
   }
-  return al===0 ? 100 : 100-(100/(1+ag/al));
+  return al===0?100:100-(100/(1+ag/al));
 }
 
 function calcMACD(closes) {
-  const e12=calcEMA(closes,12), e26=calcEMA(closes,26);
+  const e12=calcEMA(closes,12),e26=calcEMA(closes,26);
   const ml=e12.map((v,i)=>v-e26[i]);
   const sig=calcEMA(ml.slice(26),9);
-  const l=ml.length-1, s=sig.length-1;
-  return { macd:ml[l], signal:sig[s], histogram:ml[l]-sig[s], prevHistogram:ml[l-1]-sig[s-1] };
+  const l=ml.length-1,s=sig.length-1;
+  return {macd:ml[l],signal:sig[s],histogram:ml[l]-sig[s],prevHistogram:ml[l-1]-sig[s-1]};
 }
 
-function calcATR(candles, period=14) {
+function calcATR(candles,period=14) {
   const trs=[];
   for(let i=1;i<candles.length;i++){
     trs.push(Math.max(
@@ -384,7 +366,7 @@ function calcATR(candles, period=14) {
   return atr;
 }
 
-function calcADX(candles, period=14) {
+function calcADX(candles,period=14) {
   if(candles.length<period*2) return {adx:0,diPlus:0,diMinus:0};
   const dp=[],dm=[],tr=[];
   for(let i=1;i<candles.length;i++){
@@ -392,9 +374,11 @@ function calcADX(candles, period=14) {
     const dn=candles[i-1].low-candles[i].low;
     dp.push(up>dn&&up>0?up:0);
     dm.push(dn>up&&dn>0?dn:0);
-    tr.push(Math.max(candles[i].high-candles[i].low,
+    tr.push(Math.max(
+      candles[i].high-candles[i].low,
       Math.abs(candles[i].high-candles[i-1].close),
-      Math.abs(candles[i].low-candles[i-1].close)));
+      Math.abs(candles[i].low-candles[i-1].close)
+    ));
   }
   let sTR=tr.slice(0,period).reduce((a,b)=>a+b,0);
   let sDp=dp.slice(0,period).reduce((a,b)=>a+b,0);
@@ -404,37 +388,37 @@ function calcADX(candles, period=14) {
     sTR=sTR-sTR/period+tr[i];
     sDp=sDp-sDp/period+dp[i];
     sDm=sDm-sDm/period+dm[i];
-    const diP=(sDp/sTR)*100, diM=(sDm/sTR)*100;
-    dx.push({dxv:Math.abs(diP-diM)/(diP+diM)*100,diP,diM});
+    const diP=(sDp/sTR)*100,diM=(sDm/sTR)*100;
+    const sum=diP+diM;
+    dx.push({dxv:sum>0?Math.abs(diP-diM)/sum*100:0,diP,diM});
   }
   const last=dx[dx.length-1];
-  return { adx:dx.slice(-period).reduce((a,b)=>a+b.dxv,0)/period, diPlus:last.diP, diMinus:last.diM };
+  return {adx:dx.slice(-period).reduce((a,b)=>a+b.dxv,0)/period,diPlus:last.diP,diMinus:last.diM};
 }
 
-function calcBB(closes, period=20, std=2) {
+function calcBB(closes,period=20,std=2) {
   const sl=closes.slice(-period);
   const mid=sl.reduce((a,b)=>a+b,0)/period;
   const variance=sl.reduce((a,b)=>a+(b-mid)**2,0)/period;
   const s=Math.sqrt(variance);
-  return {upper:mid+std*s, middle:mid, lower:mid-std*s};
+  return {upper:mid+std*s,middle:mid,lower:mid-std*s};
 }
 
-function calcVolEMA(candles, period=20) {
-  const vols=candles.map(c=>c.volume);
-  const ema=calcEMA(vols,period);
+function calcVolEMA(candles,period=20) {
+  const ema=calcEMA(candles.map(c=>c.volume),period);
   return ema[ema.length-1];
 }
 
-//  SEÑALES 
-function analyzeCandles(candles, symbol) {
+// ── SEÑALES ──────────────────────────────────────────────────────
+function analyzeCandles(candles,symbol) {
   if(!candles||candles.length<60) return null;
   const closes=candles.map(c=>c.close);
   const cur=candles[candles.length-1];
   const price=cur.close;
 
-  const ema9=calcEMA(closes,9), ema21=calcEMA(closes,21), ema200=calcEMA(closes,200);
-  const e9=ema9[ema9.length-1], e21=ema21[ema21.length-1], e200=ema200[ema200.length-1];
-  const pe9=ema9[ema9.length-2], pe21=ema21[ema21.length-2];
+  const ema9=calcEMA(closes,9),ema21=calcEMA(closes,21),ema200=calcEMA(closes,200);
+  const e9=ema9[ema9.length-1],e21=ema21[ema21.length-1],e200=ema200[ema200.length-1];
+  const pe9=ema9[ema9.length-2],pe21=ema21[ema21.length-2];
 
   const rsi=calcRSI(closes,14);
   const macd=calcMACD(closes);
@@ -445,12 +429,12 @@ function analyzeCandles(candles, symbol) {
   // TREND MODE
   if(adx.adx>=25){
     const crossUp=(pe9<=pe21&&e9>e21)||e9>e21;
-    if(crossUp && rsi>50 && macd.histogram>0 && price>e200*0.99 && volRatio>=1.1 && adx.diPlus>adx.diMinus){
+    if(crossUp&&rsi>50&&macd.histogram>0&&price>e200*0.99&&volRatio>=1.1&&adx.diPlus>adx.diMinus){
       return {
-        signal:'LONG', mode:'TREND',
+        signal:'LONG',mode:'TREND',
         reason:`TREND ADX:${adx.adx.toFixed(1)} RSI:${rsi.toFixed(1)} VOL:${volRatio.toFixed(2)}x`,
-        price, atr,
-        tp1: price+atr*1.7, tp2: price+atr*2.7, sl: price-atr*1.0,
+        price,atr,
+        tp1:price+atr*1.7,tp2:price+atr*2.7,sl:price-atr*1.0,
         indicators:{rsi,adx:adx.adx,volRatio}
       };
     }
@@ -459,72 +443,72 @@ function analyzeCandles(candles, symbol) {
   // REVERSION MODE
   if(adx.adx<20){
     const bb=calcBB(closes,20,2);
-    if(rsi<35 && price<=bb.lower*1.005 && macd.histogram>macd.prevHistogram && macd.histogram<0 && volRatio>=1.0){
+    if(rsi<35&&price<=bb.lower*1.005&&macd.histogram>macd.prevHistogram&&macd.histogram<0&&volRatio>=1.0){
       return {
-        signal:'LONG', mode:'REVERSION',
+        signal:'LONG',mode:'REVERSION',
         reason:`REVERSION ADX:${adx.adx.toFixed(1)} RSI:${rsi.toFixed(1)} BB_LOW`,
-        price, atr,
-        tp1: bb.middle*1.002, tp2: bb.upper*0.998, sl: price-atr*0.8,
+        price,atr,
+        tp1:bb.middle*1.002,tp2:bb.upper*0.998,sl:price-atr*0.8,
         indicators:{rsi,adx:adx.adx,volRatio}
       };
     }
   }
   return null;
-}//  GESTIÓN DE POSICIONES 
-function getOpen()       { return state.slots.filter(s=>s.status==='OPEN'); }
-function hasPair(sym)    { return getOpen().some(s=>s.symbol===sym); }
-function slotsOk()       { return getOpen().length < CONFIG.maxSlots; }
+}// ── GESTIÓN DE POSICIONES ────────────────────────────────────────
+function getOpen()      { return state.slots.filter(s=>s.status==='OPEN'); }
+function hasPair(sym)   { return getOpen().some(s=>s.symbol===sym); }
+function slotsOk()      { return getOpen().length<CONFIG.maxSlots; }
 
 function correlationOk(symbol) {
   const large=['BTCUSDC','ETHUSDC','BNBUSDC'];
-  if(large.includes(symbol) && getOpen().filter(s=>large.includes(s.symbol)).length>=2) return false;
+  if(large.includes(symbol)&&getOpen().filter(s=>large.includes(s.symbol)).length>=2) return false;
   return true;
 }
 
-async function openPosition(symbol, signal) {
-  if(!slotsOk())           { addLog(`Sin slots: ${symbol}`,'WARN'); return; }
-  if(hasPair(symbol))      { return; }
+async function openPosition(symbol,signal) {
+  if(!slotsOk())            { addLog(`Sin slots: ${symbol}`,'WARN'); return; }
+  if(hasPair(symbol))       { return; }
   if(!correlationOk(symbol)){ addLog(`Correlación bloqueada: ${symbol}`,'WARN'); return; }
-  if(state.btcChange1h<-3) { addLog(`BTC cayendo >3% — pausando`,'WARN'); return; }
+  if(state.btcChange1h<-3)  { addLog(`BTC cayendo >3% — pausando`,'WARN'); return; }
 
-  let balance = CONFIG.mode==='DEMO' ? state.balance.free : await getLiveBalance();
-  const slotValue = balance * CONFIG.slotPct;
+  const balance=CONFIG.mode==='DEMO'?state.balance.free:await getLiveBalance();
+  const slotValue=balance*CONFIG.slotPct;
   if(slotValue<5){ addLog(`Balance insuficiente`,'WARN'); return; }
 
-  const qty = slotValue / signal.price;
-  addLog(` ABRIENDO ${symbol} | ${signal.reason} | Precio:${signal.price.toFixed(4)} SL:${signal.sl.toFixed(4)} TP1:${signal.tp1.toFixed(4)}`,'TRADE');
+  const qty=slotValue/signal.price;
+  addLog(`🟢 ABRIENDO ${symbol} | ${signal.reason} | Entrada:${signal.price.toFixed(4)} SL:${signal.sl.toFixed(4)} TP1:${signal.tp1.toFixed(4)}`,'TRADE');
 
-  const order = await placeOrder(symbol,'BUY',qty,signal.price);
+  const order=await placeOrder(symbol,'BUY',qty,signal.price);
   if(!order) return;
 
-  const slot = {
-    id:Date.now(), symbol, side:'LONG',
-    entryPrice:signal.price, qty, slotValue,
-    tp1:signal.tp1, tp2:signal.tp2, sl:signal.sl,
-    atr:signal.atr, mode:signal.mode, reason:signal.reason,
-    status:'OPEN', openTime:Date.now(), tp1Hit:false,
-    indicators:signal.indicators, pnl:0,
+  const slot={
+    id:Date.now(),symbol,side:'LONG',
+    entryPrice:signal.price,qty,slotValue,
+    tp1:signal.tp1,tp2:signal.tp2,sl:signal.sl,
+    atr:signal.atr,mode:signal.mode,reason:signal.reason,
+    status:'OPEN',openTime:Date.now(),tp1Hit:false,
+    indicators:signal.indicators,pnl:0,
   };
   state.slots.push(slot);
 
   if(CONFIG.mode==='DEMO'){
-    state.balance.free    -= slotValue;
-    state.balance.inTrade += slotValue;
+    state.balance.free    -=slotValue;
+    state.balance.inTrade +=slotValue;
   }
   saveState();
   renderUI();
 }
 
-async function closePosition(slot, price, reason) {
+async function closePosition(slot,price,reason) {
   const pnlPct=(price-slot.entryPrice)/slot.entryPrice*100;
   const pnlUSD=(price-slot.entryPrice)*slot.qty;
   const won=pnlPct>0;
 
-  addLog(`${won?'':''} CERRANDO ${slot.symbol} | ${reason} | PnL:${pnlPct.toFixed(2)}%`,'TRADE');
+  addLog(`${won?'🟢':'🔴'} CERRANDO ${slot.symbol} | ${reason} | PnL:${pnlPct.toFixed(2)}%`,'TRADE');
   await placeOrder(slot.symbol,'SELL',slot.qty,price);
 
-  slot.status='CLOSED'; slot.closeTime=Date.now();
-  slot.closePrice=price; slot.closePnl=pnlPct; slot.closeReason=reason;
+  slot.status='CLOSED';slot.closeTime=Date.now();
+  slot.closePrice=price;slot.closePnl=pnlPct;slot.closeReason=reason;
 
   state.stats.trades++;
   if(won) state.stats.wins++; else state.stats.losses++;
@@ -543,17 +527,15 @@ async function closePosition(slot, price, reason) {
   saveState();
   renderUI();
 
-  // Notificación
-  if('Notification' in window && Notification.permission==='granted'){
-    new Notification(`${won?'':''} ${slot.symbol} ${reason}`,{
-      body:`PnL: ${pnlPct>=0?'+':''}${pnlPct.toFixed(2)}%`,
+  if('Notification' in window&&Notification.permission==='granted'){
+    new Notification(`${won?'✅':'❌'} ${slot.symbol} ${reason}`,{
+      body:`PnL: ${pnlPct>=0?'+':''}${pnlPct.toFixed(2)}%`
     });
   }
 }
 
 async function checkExits() {
-  const open=getOpen();
-  for(const slot of open){
+  for(const slot of getOpen()){
     const price=await getPrice(slot.symbol);
     if(!price) continue;
     slot.pnl=(price-slot.entryPrice)/slot.entryPrice*100;
@@ -568,7 +550,7 @@ async function checkExits() {
       slot.sl=slot.entryPrice;
       slot.slotValue*=0.5;
       slot.qty*=0.5;
-      addLog(` TP1 ${slot.symbol} @ ${price.toFixed(4)} (+${slot.pnl.toFixed(2)}%) SLbreakeven`,'TRADE');
+      addLog(`🟡 TP1 ${slot.symbol} @ ${price.toFixed(4)} (+${slot.pnl.toFixed(2)}%) SL→breakeven`,'TRADE');
       saveState();
       continue;
     } else if(slot.tp1Hit&&price>=slot.tp2){
@@ -592,13 +574,11 @@ async function updateBTC() {
   } catch(e){}
 }
 
-function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
-
-//  CICLO PRINCIPAL 
+// ── CICLO PRINCIPAL ──────────────────────────────────────────────
 async function scanCycle() {
   if(!state.running) return;
   state.lastScan=new Date().toISOString();
-  addLog(` Escaneando ${SCAN_PAIRS.length} pares...`,'SCAN');
+  addLog(`🔍 Escaneando ${SCAN_PAIRS.length} pares...`,'SCAN');
 
   await updateBTC();
   await checkExits();
@@ -613,17 +593,16 @@ async function scanCycle() {
     if(!state.running) break;
     if(hasPair(pair)){ await sleep(100); continue; }
 
-    // volumen calculado de las velas
-
     const candles=await getKlines(pair,CONFIG.timeframe,210);
-    if(!candles){ addLog(`SIN DATOS ${pair}`,'ERROR'); await sleep(200); continue; }
+    if(!candles){ await sleep(200); continue; }
 
     const vol24h=candles.slice(-96).reduce((a,c)=>a+c.volume*c.close,0);
-if(vol24h<100000){ await sleep(100); continue; }
-const signal=analyzeCandles(candles,pair);
+    if(vol24h<100000){ await sleep(100); continue; }
+
+    const signal=analyzeCandles(candles,pair);
     if(signal){
       found++;
-      addLog(` Señal ${pair}: ${signal.reason}`,'SIGNAL');
+      addLog(`📡 Señal ${pair}: ${signal.reason}`,'SIGNAL');
       await openPosition(pair,signal);
       if(!slotsOk()) break;
     }
@@ -632,17 +611,17 @@ const signal=analyzeCandles(candles,pair);
 
   addLog(`Scan completo. Señales:${found} Slots:${getOpen().length}/${CONFIG.maxSlots}`,'SCAN');
   renderUI();
-}//  CONTROLES 
+}// ── CONTROLES ────────────────────────────────────────────────────
 async function startBot() {
   if(state.running){ showToast('Ya está corriendo'); return; }
   if(CONFIG.mode==='LIVE'&&!API_KEY){ showToast('Añade API keys primero'); return; }
   state.running=true;
   await requestWakeLock();
   if('Notification' in window) Notification.requestPermission();
-  addLog(' Bot INICIADO','SYSTEM');
+  addLog('▶️ Bot INICIADO','SYSTEM');
   updateStatusPill();
   scanCycle();
-  scanTimer=setInterval(scanCycle, CONFIG.scanInterval);
+  scanTimer=setInterval(scanCycle,CONFIG.scanInterval);
 }
 
 function stopBot() {
@@ -650,20 +629,20 @@ function stopBot() {
   if(scanTimer) clearInterval(scanTimer);
   if(wakeLock) wakeLock.release();
   document.getElementById('wakeLockStatus').textContent='INACTIVO';
-  addLog(' Bot DETENIDO','SYSTEM');
+  addLog('⏹️ Bot DETENIDO','SYSTEM');
   updateStatusPill();
 }
 
 function setMode(mode) {
   if(mode==='LIVE'){
     if(!API_KEY){ showToast('Añade API keys primero'); return; }
-    if(!confirm(' MODO LIVE — operará con dinero REAL en Binance.\n¿Confirmas?')) return;
+    if(!confirm('⚠️ MODO LIVE — operará con dinero REAL en Binance.\n¿Confirmas?')) return;
   }
   CONFIG.mode=mode;
   localStorage.setItem('zm_mode',mode);
   document.getElementById('modeBadge').textContent=mode;
   document.getElementById('modeBadge').className='mode-badge '+mode.toLowerCase();
-  document.getElementById('modeHint').textContent=mode==='DEMO'?'Sin dinero real — practica gratis':' OPERANDO CON DINERO REAL';
+  document.getElementById('modeHint').textContent=mode==='DEMO'?'Sin dinero real — practica gratis':'⚡ OPERANDO CON DINERO REAL';
   showToast('Modo: '+mode);
 }
 
@@ -679,13 +658,13 @@ function resetDemo() {
   showToast('Demo reseteado');
 }
 
-//  RENDER UI 
+// ── RENDER ───────────────────────────────────────────────────────
 function updateStatusPill() {
   const pill=document.getElementById('statusPill');
   const dot=document.getElementById('statusDot');
   const txt=document.getElementById('statusText');
-  if(state.running){ pill.className='status-pill running'; dot.className='dot pulse'; txt.textContent='ACTIVO'; }
-  else { pill.className='status-pill stopped'; dot.className='dot'; txt.textContent='PARADO'; }
+  if(state.running){pill.className='status-pill running';dot.className='dot pulse';txt.textContent='ACTIVO';}
+  else{pill.className='status-pill stopped';dot.className='dot';txt.textContent='PARADO';}
 }
 
 function renderUI() {
@@ -711,11 +690,11 @@ function renderUI() {
   const open=getOpen();
   document.getElementById('slotsCount').textContent=open.length+'/'+CONFIG.maxSlots;
 
-  // Slots
   const sl=document.getElementById('slotsList');
-  if(!open.length){ sl.innerHTML='<div class="empty">Sin posiciones.<br>El bot está escaneando 30 pares...</div>'; }
-  else { sl.innerHTML=open.map(s=>{
-    const pnl=s.pnl||0; const pc=pnl>=0?'var(--green)':'var(--red)';
+  if(!open.length){sl.innerHTML='<div class="empty">Sin posiciones.<br>El bot está escaneando 30 pares...</div>';}
+  else{sl.innerHTML=open.map(s=>{
+    const pnl=s.pnl||0;
+    const pc=pnl>=0?'var(--green)':'var(--red)';
     const tp1p=((s.tp1-s.entryPrice)/s.entryPrice*100).toFixed(1);
     const slp=((s.sl-s.entryPrice)/s.entryPrice*100).toFixed(1);
     const elapsed=Math.round((Date.now()-s.openTime)/60000);
@@ -734,16 +713,16 @@ function renderUI() {
         <div><span style="color:var(--text2);">USDC </span><span style="font-family:var(--mono);font-weight:700;">${s.slotValue.toFixed(1)}</span></div>
         <div><span style="color:var(--text2);">MIN </span><span style="font-family:var(--mono);font-weight:700;">${elapsed}</span></div>
       </div>
-      <button onclick="manualClose(${s.id})" style="width:100%;padding:6px;background:rgba(255,68,102,.1);border:1px solid rgba(255,68,102,.3);border-radius:6px;color:var(--red);font-size:11px;font-weight:600;cursor:pointer;"> CERRAR MANUALMENTE</button>
+      <button onclick="manualClose(${s.id})" style="width:100%;padding:6px;background:rgba(255,68,102,.1);border:1px solid rgba(255,68,102,.3);border-radius:6px;color:var(--red);font-size:11px;font-weight:600;cursor:pointer;">✕ CERRAR MANUALMENTE</button>
     </div>`;
   }).join('');}
 
-  // Historial
-  document.getElementById('histCount').textContent=state.closedTrades.length;
   const tl=document.getElementById('tradesList');
-  if(!state.closedTrades.length){ tl.innerHTML='<div class="empty">Sin trades cerrados aún.</div>'; }
-  else { tl.innerHTML=state.closedTrades.slice(0,30).map(t=>{
-    const pnl=t.closePnl||0; const pc=pnl>=0?'green':'red';
+  document.getElementById('histCount').textContent=state.closedTrades.length;
+  if(!state.closedTrades.length){tl.innerHTML='<div class="empty">Sin trades cerrados aún.</div>';}
+  else{tl.innerHTML=state.closedTrades.slice(0,30).map(t=>{
+    const pnl=t.closePnl||0;
+    const pc=pnl>=0?'green':'red';
     const time=t.closeTime?new Date(t.closeTime).toLocaleTimeString('es'):'—';
     return `<div style="display:flex;justify-content:space-between;padding:9px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:5px;">
       <div><div style="font-size:12px;font-weight:700;">${t.symbol}</div><div style="font-size:9px;color:var(--text2);font-family:var(--mono);">${t.closeReason} · ${time}</div></div>
@@ -754,7 +733,7 @@ function renderUI() {
 
 function renderLog(logs) {
   const el=document.getElementById('logContainer');
-  if(!logs.length){ el.innerHTML='<div style="text-align:center;color:var(--text2);font-size:11px;padding:20px">Sin logs aún</div>'; return; }
+  if(!logs.length){el.innerHTML='<div style="text-align:center;color:var(--text2);font-size:11px;padding:20px">Sin logs aún</div>';return;}
   const colors={TRADE:'var(--accent)',SIGNAL:'var(--accent2)',ERROR:'var(--red)',WARN:'var(--warn)',SYSTEM:'#888',SCAN:'var(--text2)',INFO:'var(--text)'};
   el.innerHTML=logs.slice(0,40).map(l=>`<div style="font-family:var(--mono);font-size:10px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);display:flex;gap:8px;">
     <span style="color:var(--text2);white-space:nowrap;">${new Date(l.time).toLocaleTimeString('es')}</span>
@@ -766,7 +745,7 @@ async function manualClose(id) {
   const slot=state.slots.find(s=>s.id===id);
   if(!slot) return;
   const price=await getPrice(slot.symbol);
-  await closePosition(slot, price||slot.entryPrice, 'MANUAL');
+  await closePosition(slot,price||slot.entryPrice,'MANUAL');
 }
 
 function showTab(name,el) {
@@ -776,16 +755,16 @@ function showTab(name,el) {
 }
 
 function showToast(msg) {
-  const t=document.getElementById('toast'); t.textContent=msg; t.style.opacity='1';
+  const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';
   setTimeout(()=>t.style.opacity='0',2500);
 }
 
-//  INIT 
+// ── INIT ─────────────────────────────────────────────────────────
 window.onload=()=>{
-  if(API_KEY) document.getElementById('keysStatus').textContent=' Keys guardadas — LIVE disponible';
+  if(API_KEY) document.getElementById('keysStatus').textContent='✓ Keys guardadas — LIVE disponible';
   document.getElementById('modeBadge').textContent=CONFIG.mode;
   document.getElementById('modeBadge').className='mode-badge '+CONFIG.mode.toLowerCase();
-  document.getElementById('modeHint').textContent=CONFIG.mode==='DEMO'?'Sin dinero real — practica gratis':' OPERANDO CON DINERO REAL';
+  document.getElementById('modeHint').textContent=CONFIG.mode==='DEMO'?'Sin dinero real — practica gratis':'⚡ OPERANDO CON DINERO REAL';
   document.getElementById('cfgTimeframe').value=CONFIG.timeframe;
   document.getElementById('cfgSlots').value=CONFIG.maxSlots;
   document.getElementById('cfgPct').value=Math.round(CONFIG.slotPct*100);
