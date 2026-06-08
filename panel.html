@@ -602,10 +602,7 @@ if(!signal){
   const closes=candles.map(c=>c.close);
   const rsi=calcRSI(closes,14);
   const adx=calcADX(candles,14);
-  const macd=calcMACD(closes);
-  const e9=calcEMA(closes,9); const e21=calcEMA(closes,21);
-  const volR=candles[candles.length-1].volume/calcVolEMA(candles,20);
-  addLog(`${pair} ADX:${adx.adx.toFixed(1)} RSI:${rsi.toFixed(1)} MACD:${macd.histogram.toFixed(4)} VOL:${volR.toFixed(2)} EMA9>${adx.diPlus>adx.diMinus?'DI+':'DI-'}`,'INFO');
+  addLog(pair+' ADX:'+adx.adx.toFixed(1)+' RSI:'+rsi.toFixed(1),'INFO');
 }
       found++;
       addLog(`📡 Señal ${pair}: ${signal.reason}`,'SIGNAL');
