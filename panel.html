@@ -468,7 +468,7 @@ function analyzeCandles(candles) {
         signal:'LONG', mode:'REVERSION',
         reason:'REVERSION ADX:'+adx.adx.toFixed(1)+' RSI:'+rsi.toFixed(1)+' BB_LOW',
         price:price, atr:atr,
-        tp1:bb.middle*1.002, tp2:bb.upper*0.998, sl:price-atr*1.2,
+        tp1:bb.middle, tp2:bb.upper*1.05, sl:price-atr*1.8,
         indicators:{rsi:rsi, adx:adx.adx, volRatio:volRatio}
       };
     }
