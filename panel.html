@@ -441,7 +441,7 @@ function analyzeCandles(candles) {
   if(adx.adx>=25){
     const crossUp=(pe9<=pe21&&e9>e21)||e9>e21;
     const rsiOk=rsi>50;
-    const macdOk=macd.histogram>0;
+    const macdOk=macd.histogram>0&&macd.histogram>macd.prevHistogram;
     const priceOk=price>e200*0.99;
     const volOk=volRatio>=1.1;
     const diOk=adx.diPlus>adx.diMinus;
@@ -450,7 +450,7 @@ function analyzeCandles(candles) {
         signal:'LONG', mode:'TREND',
         reason:'TREND ADX:'+adx.adx.toFixed(1)+' RSI:'+rsi.toFixed(1)+' VOL:'+volRatio.toFixed(2)+'x',
         price:price, atr:atr,
-        tp1:price+atr*1.7, tp2:price+atr*2.7, sl:price-atr*1.0,
+        tp1:price+atr*2.2, tp2:price+atr*3.5, sl:price-atr*1.5,
         indicators:{rsi:rsi, adx:adx.adx, volRatio:volRatio}
       };
     }
