@@ -813,7 +813,17 @@ function showToast(msg) {
   t.style.opacity='1';
   setTimeout(function(){t.style.opacity='0';},2500);
 }
-
+// ── SERVICE WORKER ───────────────────────────────────────────────
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/zenith-multibot/sw.js')
+    .then(function(reg){
+      console.log('SW registrado:', reg.scope);
+      setInterval(function(){
+        if(reg.active) reg.active.postMessage('keepalive');
+      }, 20000);
+    })
+    .catch(function(e){ console.log('SW error:', e); });
+}
 // ── INIT ─────────────────────────────────────────────────────────
 window.onload=function(){
   if(API_KEY) document.getElementById('keysStatus').textContent='Keys guardadas — LIVE disponible';
