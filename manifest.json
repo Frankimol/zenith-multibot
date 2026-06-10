@@ -1,0 +1,22 @@
+{
+  "name": "Zenith MultiBot",
+  "short_name": "ZenithBot",
+  "description": "Crypto trading bot multi-pair",
+  "start_url": "/zenith-multibot/panel.html",
+  "display": "standalone",
+  "background_color": "#070a0f",
+  "theme_color": "#070a0f",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192/00ff88/000000?text=ZB",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512/00ff88/000000?text=ZB",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
