@@ -647,7 +647,8 @@ async function scanCycle() {
   addLog('Scan completo. Senales:'+found+' Slots:'+getOpen().length+'/'+CONFIG.maxSlots,'SCAN');
   renderUI();
 }// ── CONTROLES ────────────────────────────────────────────────────
-async function startBot() {
+const silentAudio = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=');
+silentAudio.loop = true;async function startBot() {
   if(state.running){ showToast('Ya esta corriendo'); return; }
   if(CONFIG.mode==='LIVE'&&!API_KEY){ showToast('Añade API keys primero'); return; }
   state.running=true;
