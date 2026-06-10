@@ -657,6 +657,7 @@ async function startBot() {
   await requestWakeLock();
   if('Notification' in window) Notification.requestPermission();
   addLog('Bot INICIADO','SYSTEM');
+silentAudio.play().catch(function(){});
   updateStatusPill();
   scanCycle();
   scanTimer=setInterval(scanCycle,CONFIG.scanInterval);
@@ -668,6 +669,7 @@ function stopBot() {
   if(wakeLock) wakeLock.release();
   document.getElementById('wakeLockStatus').textContent='INACTIVO';
   addLog('Bot DETENIDO','SYSTEM');
+silentAudio.pause();
   updateStatusPill();
 }
 
