@@ -574,20 +574,23 @@ async function checkExits() {
     slot.pnl=(price-slot.entryPrice)/slot.entryPrice*100;
     const elapsed=(Date.now()-slot.openTime)/60000;
     const timeout=CONFIG.timeframe==='5m'?120:CONFIG.timeframe==='15m'?240:480;
-    let closeReason=null;
 
+    // TRAILING STOP ESCALONADO: cada 0.5% de subida, SL sube 0.5%
+    const pnlPct=(price-slot.entryPrice)/slot.entryPrice*100;
+    if(pnlPct>0){
+      const steps=Math.floor(pnlPct/0.5);
+      const newSL=slot.entryPrice*(1+(steps-1)*0.005);
+      if(newSL>slot.sl){
+        const oldSL=slot.sl;
+        slot.sl=newSL;
+        addLog('TRAIL '+slot.symbol+' precio:+'+pnlPct.toFixed(2)+'% SL:'+oldSL.toFixed(4)+' -> '+newSL.toFixed(4),'INFO');
+        saveState();
+      }
+    }
+
+    let closeReason=null;
     if(price<=slot.sl){
       closeReason='STOP_LOSS';
-    } else if(!slot.tp1Hit&&price>=slot.tp1){
-      slot.tp1Hit=true;
-      slot.sl=slot.entryPrice;
-      slot.slotValue=slot.slotValue*0.5;
-      slot.qty=slot.qty*0.5;
-      addLog('TP1 '+slot.symbol+' @ '+price.toFixed(4)+' (+'+slot.pnl.toFixed(2)+'%) SL a breakeven','TRADE');
-      saveState();
-      continue;
-    } else if(slot.tp1Hit&&price>=slot.tp2){
-      closeReason='TP2';
     } else if(elapsed>=timeout){
       closeReason='TIMEOUT';
     }
