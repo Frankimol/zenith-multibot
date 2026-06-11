@@ -515,7 +515,7 @@ async function openPosition(symbol, signal) {
     entryPrice:signal.price, qty:qty, slotValue:slotValue,
     tp1:signal.tp1, tp2:signal.tp2, sl:signal.sl,
     atr:signal.atr, mode:signal.mode, reason:signal.reason,
-    status:'OPEN', openTime:Date.now(), tp1Hit:false,
+    status:'OPEN', openTime:Date.now(),
     indicators:signal.indicators, pnl:0
   };
   state.slots.push(slot);
